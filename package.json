@@ -1,0 +1,25 @@
+{
+  "name": "jdw-billboarding-vscode",
+  "displayName": "jdw-billboarding-vscode",
+  "description": "Syntax highlighting for .bbd files",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "bbd",
+      "aliases": ["jdw-billboarding", "bbd"],
+      "extensions": [".bbd"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "bbd",
+      "scopeName": "source.bbd",
+      "path": "./syntaxes/bbd.tmLanguage.json"
+    }]
+  }
+}
