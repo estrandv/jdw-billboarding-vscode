@@ -1,0 +1,45 @@
+{
+  "name": "jdw-commands",
+  "displayName": "jdw-commands",
+  "description": "Helper commands for Jackdaw billboarding",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.91.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "jdw-commands.deselectAll",
+        "title": "JDW: Deselect all synths"
+      },
+      {
+        "command": "jdw-commands.selectLine",
+        "title": "JDW: Select current line"
+      },
+      {
+        "command": "jdw-commands.commentFilters",
+        "title": "JDW: Comment all filters"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.91.0",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.4.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  }
+}

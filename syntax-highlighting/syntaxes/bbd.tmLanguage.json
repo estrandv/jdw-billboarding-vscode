@@ -1,0 +1,117 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "jdw-billboarding",
+	"patterns": [
+		
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#group_filters"
+		},
+		{
+			"include": "#headers"
+		},
+		{
+			"include": "#arg_names"
+		},
+		{
+			"include": "#arg_values"
+		},
+		{
+			"include": "#meta_info"
+		},
+		{
+			"include": "#command_categories"
+		},
+		{
+			"include": "#command_names"
+		},
+		{
+			"include": "#track_names"
+		}					
+	],
+	"repository": {
+		"example_keywords": {
+			"patterns": [{
+				"name": "keyword.control.bbd",
+				"match": "\\b(if|while|for|return)\\b"
+			}]
+		},
+		"comments": {
+			"patterns": [{
+				"name": "comment.line",
+				"match": "#(.*)"
+			}]
+		},
+		"command_categories": {
+			"patterns": [{
+				"name": "comment",
+				"match": "^[A-Z_]*COMMAND\\s"
+			}]
+		},
+		"command_names": {
+			"patterns": [{
+				"name": "string",
+				"match": "(?<=[A-Za-z_]+\\s)\\/[a-zA-Z_]+"
+			}]
+		},
+		"group_filters": {
+			"patterns": [{
+				"name": "constant.numeric",
+				"match": "\\>\\>\\>(.*)"
+			}]
+		},
+		"headers": {
+			"patterns": [{
+				"name": "keyword.control",
+				"match": "(\\@|\\€).+?(?=(\\s|\\n|\\:))"
+			}]
+		},
+		"args": {
+			"patterns": [{
+				"name": "constant.numeric",
+				"match": "((?<=:)|(?<=,)|(?<=(.*(\\@|\\€).*)))([A-z]+|(?<=\\:))[\\-\\+\\*]?([0-9]+\\.?[0-9]*)"
+			}]
+		},
+		"arg_names": {
+			"patterns": [{
+				"name": "comment",
+				"match": "((?<=DEFAULT\\s)|(?<=\\:)|(?<=\\,)|(?<=(.*(\\@|\\€).*)))[A-z]+(?=[\\+\\-\\*]*[0-9]+)"
+			}]
+		},
+		"arg_values": {
+			"patterns": [{
+				"name": "string",
+				"match": "(?<=[\\,\\:]+[A-z]+|(?<=\\:)|(?<=.*[\\€\\@].*\\s.*))[\\+\\-\\*]*[0-9]+\\.?[0-9]*"
+			}]
+		},
+		"meta_info": {
+			"patterns": [{
+				"name": "comment",
+				"match": "\\<.*\\>"
+			}]
+		},
+		"track_names": {
+			"patterns": [{
+				"name": "constant.numeric",
+				"match": "(?<=\\@.*\\:)[A-z|0-9]+"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.bbd",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.bbd",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.bbd"
+}
