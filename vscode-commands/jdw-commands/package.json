@@ -2,7 +2,7 @@
   "name": "jdw-commands",
   "displayName": "jdw-commands",
   "description": "Helper commands for Jackdaw billboarding",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.91.0"
   },
@@ -24,6 +24,18 @@
       {
         "command": "jdw-commands.commentFilters",
         "title": "JDW: Comment all filters"
+      },
+      {
+        "command": "jdw-commands.playFile",
+        "title": "JDW: Play"
+      },
+      {
+        "command": "jdw-commands.setup",
+        "title": "JDW: Setup"
+      },
+      {
+        "command": "jdw-commands.update",
+        "title": "JDW: Update"
       }
     ]
   },

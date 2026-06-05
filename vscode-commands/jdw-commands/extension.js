@@ -1,37 +1,64 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
+const { exec } = require('child_process');
+const os = require('os');
+const path = require('path');
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
-function replaceAll(context, regex, replaceWith) {
+async function replaceAll(context, regex, replaceWith) {
 	const textEditor = vscode.window.activeTextEditor;
 	if (!textEditor) {
-	  vscode.window.showErrorMessage("Editor Does Not Exist");
-	  return;
+		vscode.window.showErrorMessage("Editor Does Not Exist");
+		return;
 	}
-	var m;
+	
 	let fullText = textEditor.document.getText();
-	
 	let textReplace = fullText.replace(regex, replaceWith);
-	
-	//Creating a new range with startLine, startCharacter & endLine, endCharacter.
 	let invalidRange = new vscode.Range(0, 0, textEditor.document.lineCount, 0);
-	
-	// To ensure that above range is completely contained in this document.
 	let validFullRange = textEditor.document.validateRange(invalidRange);
 	
-	while ((m = regex.exec(fullText)) !== null) {
-	  // This is necessary to avoid infinite loops with zero-width matches
-	  if (m.index === regex.lastIndex) {
-		regex.lastIndex++;
-	  }
-	
-	  textEditor.edit(editBuilder => {
+	await textEditor.edit(editBuilder => {
 		editBuilder.replace(validFullRange, textReplace);
-	  });
+	});
+}
+
+function runWithCurrentFile(context, script_path) {
+	const editor = vscode.window.activeTextEditor;
+	if (!editor) {
+		vscode.window.showErrorMessage("No active file open.");
+		return;
 	}
+
+	const document = editor.document;
+	if (document.isUntitled) {
+		vscode.window.showWarningMessage("Please save the file before running the script.");
+		return;
+	}
+
+	const filePath = editor.document.uri.fsPath; // ✅ absolute path
+
+	if (!filePath.includes('.bbd')) {
+		vscode.window.showErrorMessage(`Current open file is not in .bbd format and cannote be used for the command`);
+		return;
+	}
+
+
+	// Quote the paths to safely handle spaces or special characters
+	const command = `bash "${script_path}" "${filePath}"`;
+
+	exec(command, (error, stdout, stderr) => {
+		if (error) {
+			vscode.window.showErrorMessage(`Script error: ${error.message}`);
+			return;
+		}
+		if (stderr) {
+			console.error(`stderr: ${stderr}`);
+		}
+		vscode.window.showInformationMessage(`JDW: Command executed!`);
+	});
 }
 
 
@@ -54,9 +81,9 @@ function activate(context) {
 
 	context.subscriptions.push(disposable);
 
-	const selectCom = vscode.commands.registerCommand('jdw-commands.selectLine', function () {
-		const regex = /\*/g; // 'g' flag is for global search 
-		replaceAll(context, regex, "");
+	const selectCom = vscode.commands.registerCommand('jdw-commands.selectLine', async function () {
+		const regex = /\*+@/g; // 'g' flag is for global search 
+		await replaceAll(context, regex, "@");
 		
 		const editor = vscode.window.activeTextEditor;
 		const cursor = editor.selection;
@@ -69,6 +96,28 @@ function activate(context) {
 	
 	});
 	context.subscriptions.push(selectCom);
+	
+	const passOpenFile = vscode.commands.registerCommand('jdw-commands.playFile', function () {
+		const homeDir = os.homedir();
+		const scriptPath = path.join(homeDir, 'programming/jdw-helper-scripts', 'send-jam.sh');
+		runWithCurrentFile(context, scriptPath)
+	});
+	context.subscriptions.push(passOpenFile);
+	
+	const updateWithOpenFile = vscode.commands.registerCommand('jdw-commands.update', function () {
+		const homeDir = os.homedir();
+		const scriptPath = path.join(homeDir, 'programming/jdw-helper-scripts', 'update-config.sh');
+		runWithCurrentFile(context, scriptPath)
+	});
+	context.subscriptions.push(updateWithOpenFile);
+	
+	const setupWithOpenFile = vscode.commands.registerCommand('jdw-commands.setup', function () {
+		const homeDir = os.homedir();
+		const scriptPath = path.join(homeDir, 'programming/jdw-helper-scripts', 'setup-jam.sh');
+		runWithCurrentFile(context, scriptPath)
+	});
+	context.subscriptions.push(setupWithOpenFile);
+
 
 	const commentFilters = vscode.commands.registerCommand('jdw-commands.commentFilters', function () {
 		const regex = /^>>>/gm; 
